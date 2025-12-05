@@ -20,6 +20,7 @@ RUN set -eux; \
       xterm \
       feh \
       net-tools \
+      terminator \
       locales; \
     locale-gen en_US.UTF-8; \
     rm -rf /var/lib/apt/lists/*
@@ -28,7 +29,11 @@ RUN set -eux; \
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-      ros-${ROS_DISTRO}-desktop; \
+      ros-${ROS_DISTRO}-desktop \
+      ros-${ROS_DISTRO}-rqt \
+      ros-${ROS_DISTRO}-rqt-common-plugins \
+      ros-${ROS_DISTRO}-rqt-tf-tree \
+      ros-${ROS_DISTRO}-plotjuggler-ros; \
     rm -rf /var/lib/apt/lists/*
 
 # ロケールと表示系のデフォルト

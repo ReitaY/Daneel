@@ -42,7 +42,31 @@ RUN set -eux; \
 # アップグレード
 RUN apt-get update \
     && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends python3-pip \
+    && apt-get install -y --no-install-recommends \
+        python3-pip \
+        tmux \
+        tree \
+        htop \
+        ripgrep \
+        fd-find \
+        bash-completion \
+        fzf \
+        less \
+        vim \
+        iputils-ping \
+        dnsutils \
+        zip \
+        unzip \
+        rsync \
+        strace \
+        jq \
+        build-essential \
+        cmake \
+        ninja-build \
+        gdb \
+        nmap \
+        traceroute \
+    && ln -s /usr/bin/fdfind /usr/local/bin/fd \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SHELL=/bin/bash
