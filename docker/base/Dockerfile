@@ -74,6 +74,13 @@ ENV SHELL=/bin/bash
 # ROS 環境設定を全ユーザの bashrc に追加
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /etc/bash.bashrc
 
+# tmux デフォルト設定を配る例（base イメージの Dockerfile 断片）
+COPY config/tmux.conf /etc/skel/.tmux.conf
+
+# 既存ユーザにも反映したければ
+RUN cp /etc/skel/.tmux.conf /home/${USER_NAME}/.tmux.conf \
+    && chown ${USER_NAME}:${GROUP_ID} /home/${USER_NAME}/.tmux.conf
+
 # ワークスペース作成 + オーナー変更
 RUN mkdir -p "/home/${USER_NAME}/ros2_ws" \
     && chown -R "${USER_NAME}:${GROUP_ID}" "/home/${USER_NAME}"

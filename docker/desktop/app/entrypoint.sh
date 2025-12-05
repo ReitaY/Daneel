@@ -36,6 +36,13 @@ else
   echo "WARNING: style not found: ${STYLE_PATH}" >&2
 fi
 
+# ===== terminator をデフォルト端末に設定 =====
+if grep -q '^session.terminal:' "${INIT_FILE}" 2>/dev/null; then
+  sed -i 's|^session.terminal:.*|session.terminal:    terminator|' "${INIT_FILE}"
+else
+  echo 'session.terminal:    terminator' >> "${INIT_FILE}"
+fi
+
 # ===== startup の生成（いままでのやつ） =====
 STARTUP_FILE="${HOME}/.fluxbox/startup"
 mkdir -p "$(dirname "${STARTUP_FILE}")"
