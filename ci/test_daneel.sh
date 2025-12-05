@@ -28,7 +28,7 @@ for distro in "${ROS_DISTROS[@]}"; do
     -t "${BASE_IMAGE}" \
     --build-arg "ROS_DISTRO=${distro}" \
     -f "${REPO_ROOT}/docker/base/Dockerfile" \
-    "${REPO_ROOT}"
+    "${REPO_ROOT}/docker/base"
 
   # 2) desktop イメージのビルド（base を前提とする想定）
   DESKTOP_IMAGE="${IMAGE_PREFIX}/desktop:${distro}"
@@ -37,7 +37,7 @@ for distro in "${ROS_DISTROS[@]}"; do
     -t "${DESKTOP_IMAGE}" \
     --build-arg "BASE_IMAGE=${BASE_IMAGE}" \
     -f "${REPO_ROOT}/docker/desktop/Dockerfile" \
-    "${REPO_ROOT}"
+    "${REPO_ROOT}/docker/desktop"
 
   # 3) ベースイメージのスモークテスト
   echo "[3] Smoke test: base image (ros2 -h)"
@@ -45,7 +45,7 @@ for distro in "${ROS_DISTROS[@]}"; do
 
   # 4) デスクトップイメージのスモークテスト
   echo "[4] Smoke test: desktop image (ros2 -h)"
-  docker run --rm "${DESKTOP_IMAGE}" bash -lc 'ros2 -h >/dev/null 2>&1'
+  docker run --rm --entrypoint bash "${DESKTOP_IMAGE}" -lc "source /opt/ros/${distro}/setup.bash && ros2 -h >/dev/null 2>&1"
 
   echo ">>> OK: ROS_DISTRO=${distro} (base + desktop)"
   echo
