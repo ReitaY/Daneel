@@ -56,15 +56,6 @@ USER ${USER_NAME}
 ENV HOME=/home/${USER_NAME}
 WORKDIR /home/${USER_NAME}/ros2_ws
 
-# Fluxbox の設定をユーザホームに配置しておく
-RUN set -eux; \
-    mkdir -p /home/${USER_NAME}/.fluxbox; \
-    cp /app/fluxbox/startup /home/${USER_NAME}/.fluxbox/startup; \
-    chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}/.fluxbox; \
-    chmod +x /home/${USER_NAME}/.fluxbox/startup; \
-    mkdir -p /var/log/supervisor; \
-    chown -R ${USER_NAME}:${USER_NAME} /app /var/log/supervisor
-
 # コンテナ起動 = GUI スタック起動
 EXPOSE 8080
 ENTRYPOINT ["/app/entrypoint.sh"]
