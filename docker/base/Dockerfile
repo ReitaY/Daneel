@@ -47,6 +47,9 @@ RUN apt-get update \
 
 ENV SHELL=/bin/bash
 
+# ROS 環境設定を全ユーザの bashrc に追加
+RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /etc/bash.bashrc
+
 # ワークスペース作成 + オーナー変更
 RUN mkdir -p "/home/${USER_NAME}/ros2_ws" \
     && chown -R "${USER_NAME}:${GROUP_ID}" "/home/${USER_NAME}"
@@ -54,3 +57,4 @@ RUN mkdir -p "/home/${USER_NAME}/ros2_ws" \
 WORKDIR /home/${USER_NAME}/ros2_ws
 
 USER ${USER_NAME}
+
