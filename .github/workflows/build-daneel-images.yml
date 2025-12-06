@@ -22,7 +22,7 @@ jobs:
     env:
       # 出力先の GHCR プレフィックス
       # → ghcr.io/<owner>/daneel/...
-      IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/daneel
+      IMAGE_PREFIX: ghcr.io/${{ toLower(github.repository_owner) }}/daneel
 
       # マルチアーキ
       PLATFORMS: linux/amd64,linux/arm64
