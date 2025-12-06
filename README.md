@@ -16,7 +16,7 @@ The goals are:
 - Reproduce the same development environment on different hosts with minimal friction
 - Provide a browser-accessible Linux desktop when you need a GUI
 - Deploy a **lightweight, non-GUI runtime image** on robots or remote machines
-
+  
 To achieve this, Daneel provides two main image layers:
 
 - a **base layer** for common CLI / ROS 2 tooling
@@ -68,7 +68,7 @@ This is where **[Daneel_template](https://github.com/ReitaY/Daneel_template)** c
 
 With `Daneel_template`, you can structure your project like:
 
-- `myproject-base`  
+- `myproject-runtime`  
   - `FROM` the Daneel base layer
   - Adds project-wide dependencies and tools
 - `myproject-desktop`  
