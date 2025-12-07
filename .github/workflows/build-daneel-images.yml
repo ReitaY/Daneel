@@ -49,8 +49,8 @@ jobs:
           # ここでパスを組み立てる
           IMAGE_PREFIX="ghcr.io/${OWNER_LC}/daneel"
 
-          BASE_IMAGE="${IMAGE_PREFIX}-base:${DISTRO}"
-          DESKTOP_IMAGE="${IMAGE_PREFIX}-desktop:${DISTRO}"
+          BASE_IMAGE="${IMAGE_PREFIX}_base:${DISTRO}"
+          DESKTOP_IMAGE="${IMAGE_PREFIX}_desktop:${DISTRO}"
 
           echo "=== Building ROS_DISTRO=${DISTRO} ==="
           echo "OWNER        = ${GITHUB_REPOSITORY_OWNER}"
