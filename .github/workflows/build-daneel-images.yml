@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ros_distro: [humble, jazzy, rolling]
+        ros_distro: [humble, jazzy, lyrical, rolling]
 
     env:
       PLATFORMS: linux/amd64,linux/arm64

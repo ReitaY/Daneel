@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 # テスト対象の ROS ディストリビューション
-ROS_DISTROS=("humble" "jazzy" "rolling")
+ROS_DISTROS=("humble" "jazzy" "lyrical" "rolling")
 
 # イメージ名のプレフィックス（必要なら環境変数で上書きできるようにしておく）
 IMAGE_PREFIX="${IMAGE_PREFIX:-daneel}"
@@ -48,6 +48,13 @@ for distro in "${ROS_DISTROS[@]}"; do
   docker run --rm --entrypoint bash "${DESKTOP_IMAGE}" -lc "source /opt/ros/${distro}/setup.bash && ros2 -h >/dev/null 2>&1"
 
   echo ">>> OK: ROS_DISTRO=${distro} (base + desktop)"
+
+  # 5) CI ではディスクが足りなくならないよう、distro ごとにイメージを消す
+  if [[ "${CI:-}" == "true" ]]; then
+    docker rmi "${DESKTOP_IMAGE}" "${BASE_IMAGE}" >/dev/null || true
+    docker builder prune -af >/dev/null || true
+    df -h / | tail -1
+  fi
   echo
 done
 
