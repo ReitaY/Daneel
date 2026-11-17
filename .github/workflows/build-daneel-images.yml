@@ -1,10 +1,47 @@
 name: Build & Push Daneel base/desktop images
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      distros:
+        description: "Comma-separated ROS distros to build and push (allowed: humble, jazzy, lyrical, rolling). Example: lyrical"
+        required: true
+        type: string
 
 jobs:
+  select-distros:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+    steps:
+      - name: Validate and build the distro matrix
+        id: select
+        env:
+          DISTROS: ${{ inputs.distros }}
+        run: |
+          set -euo pipefail
+          allowed=" humble jazzy lyrical rolling "
+          selected=()
+          IFS=',' read -ra items <<< "${DISTROS}"
+          for item in "${items[@]}"; do
+            d="$(echo "${item}" | tr -d '[:space:]')"
+            [[ -z "${d}" ]] && continue
+            if [[ "${allowed}" != *" ${d} "* ]]; then
+              echo "::error::Unknown distro: ${d} (allowed:${allowed})"
+              exit 1
+            fi
+            selected+=("${d}")
+          done
+          if [[ ${#selected[@]} -eq 0 ]]; then
+            echo "::error::No distro selected"
+            exit 1
+          fi
+          matrix="$(printf '%s\n' "${selected[@]}" | jq -R . | jq -cs .)"
+          echo "Selected: ${matrix}"
+          echo "matrix=${matrix}" >> "${GITHUB_OUTPUT}"
+
   build-and-push:
+    needs: select-distros
     runs-on: ubuntu-latest
 
     permissions:
@@ -14,7 +51,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ros_distro: [humble, jazzy, lyrical, rolling]
+        ros_distro: ${{ fromJSON(needs.select-distros.outputs.matrix) }}
 
     env:
       PLATFORMS: linux/amd64,linux/arm64
