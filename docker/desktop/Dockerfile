@@ -32,8 +32,16 @@ RUN set -eux; \
       ros-${ROS_DISTRO}-desktop \
       ros-${ROS_DISTRO}-rqt \
       ros-${ROS_DISTRO}-rqt-common-plugins \
-      ros-${ROS_DISTRO}-rqt-tf-tree \
-      ros-${ROS_DISTRO}-plotjuggler-ros; \
+      ros-${ROS_DISTRO}-rqt-tf-tree; \
+    # plotjuggler-ros は apt にまだない distro がある（2026-11 時点で lyrical）。
+    # あれば入れ、なければ /etc/daneel/omitted-packages.txt に記録して先へ進む
+    mkdir -p /etc/daneel; \
+    if apt-cache show "ros-${ROS_DISTRO}-plotjuggler-ros" >/dev/null 2>&1; then \
+      apt-get install -y --no-install-recommends "ros-${ROS_DISTRO}-plotjuggler-ros"; \
+    else \
+      echo "ros-${ROS_DISTRO}-plotjuggler-ros" >> /etc/daneel/omitted-packages.txt; \
+      echo "WARNING: ros-${ROS_DISTRO}-plotjuggler-ros is not available; skipped"; \
+    fi; \
     rm -rf /var/lib/apt/lists/*
 
 # ロケールと表示系のデフォルト
